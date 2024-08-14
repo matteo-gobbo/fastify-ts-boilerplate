@@ -1,5 +1,7 @@
 import fastify from "fastify";
 import fastifyEnv from "@fastify/env";
+import fastifyAutoload from "@fastify/autoload";
+import { join } from "path";
 
 const schema = {
   type: "object",
@@ -21,8 +23,16 @@ async function buildServer() {
 
   await app.register(fastifyEnv, { dotenv: true, schema });
 
-  app.get("/", () => {
-    return { hello: "world" };
+  app.register(fastifyAutoload, {
+    dir: join(__dirname, "services"),
+  });
+  app.register(fastifyAutoload, {
+    dir: join(__dirname, "http/routes"),
+    options: { prefix: "/api" },
+  });
+
+  app.ready().then(() => {
+    app.log.info(app.printRoutes());
   });
 
   return app;
