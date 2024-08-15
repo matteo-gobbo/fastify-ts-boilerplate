@@ -1,7 +1,9 @@
 import fastify from "fastify";
 import fastifyEnv from "@fastify/env";
 import fastifyAutoload from "@fastify/autoload";
+import fastifySensible from "@fastify/sensible";
 import { join } from "path";
+import { errorHandler } from "./http/errors";
 
 const schema = {
   type: "object",
@@ -23,6 +25,8 @@ async function buildServer() {
 
   await app.register(fastifyEnv, { dotenv: true, schema });
 
+  app.register(fastifySensible);
+
   app.register(fastifyAutoload, {
     dir: join(__dirname, "plugins"),
   });
@@ -33,6 +37,8 @@ async function buildServer() {
     dir: join(__dirname, "http/routes"),
     options: { prefix: "/api" },
   });
+
+  app.setErrorHandler(errorHandler);
 
   return app;
 }
