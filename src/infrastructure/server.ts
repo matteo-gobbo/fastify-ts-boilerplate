@@ -31,10 +31,6 @@ async function buildServer() {
     options: { prefix: "/api" },
   });
 
-  app.ready().then(() => {
-    app.log.info(app.printRoutes());
-  });
-
   return app;
 }
 

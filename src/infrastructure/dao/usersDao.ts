@@ -6,4 +6,8 @@ export class UsersDao implements UsersRepository {
     // I can call the db or external apis here
     return { id, email: "matteo.gobbo@conio.com" };
   }
+
+  async createUser(email: string): Promise<User | undefined> {
+    return { id: "123", email };
+  }
 }

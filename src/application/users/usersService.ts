@@ -11,6 +11,12 @@ export class UsersService {
     return user;
   }
 
+  async createUser(email: User["email"]): Promise<User> {
+    const user = await this.usersRepository.createUser(email);
+    this.handleNotFound(user, email);
+    return user;
+  }
+
   private handleNotFound(
     user: User | undefined,
     id: User["id"]
