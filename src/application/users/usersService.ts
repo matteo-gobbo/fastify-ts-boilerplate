@@ -5,6 +5,11 @@ import { UsersRepository } from "./usersRepository";
 export class UsersService {
   constructor(protected readonly usersRepository: UsersRepository) {}
 
+  async findAll(): Promise<User[]> {
+    const users = await this.usersRepository.findAll();
+    return users;
+  }
+
   async findById(id: User["id"]): Promise<User> {
     const user = await this.usersRepository.findById(id);
     this.handleNotFound(user, id);
