@@ -8,7 +8,7 @@ export default async function (app: FastifyInstance) {
         Params: { id: string };
       }>
     ) => {
-      return await app.usersService.findById(request.params.id);
+      return await app.usersService.findById(Number(request.params.id));
     }
   );
 

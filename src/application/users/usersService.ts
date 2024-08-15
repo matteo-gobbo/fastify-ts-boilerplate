@@ -1,5 +1,5 @@
 import type { User } from "./model";
-import { NotFoundException } from "../commons/exceptions";
+import { BadRequestException, NotFoundException } from "../commons/exceptions";
 import { UsersRepository } from "./usersRepository";
 
 export class UsersService {
@@ -13,7 +13,7 @@ export class UsersService {
 
   async createUser(email: User["email"]): Promise<User> {
     const user = await this.usersRepository.createUser(email);
-    this.handleNotFound(user, email);
+    this.handleNotCreated(user, email);
     return user;
   }
 
@@ -23,6 +23,17 @@ export class UsersService {
   ): asserts user is User {
     if (!user) {
       throw new NotFoundException(`User with id ${id} does not exist`);
+    }
+  }
+
+  private handleNotCreated(
+    user: User | undefined,
+    email: User["email"]
+  ): asserts user is User {
+    if (!user) {
+      throw new BadRequestException(
+        `User with email ${email} cannot be created`
+      );
     }
   }
 }
