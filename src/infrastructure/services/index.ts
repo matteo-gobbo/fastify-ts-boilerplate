@@ -10,7 +10,7 @@ declare module "fastify" {
 }
 
 export default fp(async (fastify) => {
-  const usersRepository: UsersRepository = new UsersDao();
+  const usersRepository: UsersRepository = new UsersDao(fastify.prisma);
   const usersService = new UsersService(usersRepository);
   fastify.decorate("usersService", usersService);
 });

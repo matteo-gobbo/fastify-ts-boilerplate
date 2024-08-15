@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   private handleNotFound(
-    user: User | undefined,
+    user: User | null,
     id: User["id"]
   ): asserts user is User {
     if (!user) {

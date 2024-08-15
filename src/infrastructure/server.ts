@@ -24,6 +24,9 @@ async function buildServer() {
   await app.register(fastifyEnv, { dotenv: true, schema });
 
   app.register(fastifyAutoload, {
+    dir: join(__dirname, "plugins"),
+  });
+  app.register(fastifyAutoload, {
     dir: join(__dirname, "services"),
   });
   app.register(fastifyAutoload, {
