@@ -1,7 +1,7 @@
 import fp from "fastify-plugin";
 import { UsersService } from "../../application/users/usersService";
-import { UsersRepository } from "../../application/users/usersRepository";
 import { UsersDao } from "../dao/usersDao";
+import { IUserRepository } from "../../application/users/userRepository";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -10,7 +10,7 @@ declare module "fastify" {
 }
 
 export default fp(async (fastify) => {
-  const usersRepository: UsersRepository = new UsersDao(fastify.prisma);
+  const usersRepository: IUserRepository = new UsersDao(fastify.prisma);
   const usersService = new UsersService(usersRepository);
   fastify.decorate("usersService", usersService);
 });

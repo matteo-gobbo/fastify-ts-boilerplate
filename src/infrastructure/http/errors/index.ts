@@ -1,5 +1,8 @@
 import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
-import { NotFoundException } from "../../../application/commons/exceptions";
+import {
+  BadRequestException,
+  NotFoundException,
+} from "../../../application/commons/exceptions";
 
 export function errorHandler(
   error: FastifyError,
@@ -8,6 +11,9 @@ export function errorHandler(
 ) {
   if (error instanceof NotFoundException) {
     return reply.notFound(error.message);
+  }
+  if (error instanceof BadRequestException) {
+    return reply.badRequest(error.message);
   }
 
   reply.log.error(

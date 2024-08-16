@@ -11,4 +11,7 @@ export const User = z.intersection(
   CreateUser
 );
 
-export const PaginatedUsers = z.array(User);
+export const PaginatedUsers = z.object({
+  total: z.number(),
+  data: z.array(User),
+});

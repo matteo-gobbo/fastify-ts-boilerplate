@@ -29,13 +29,17 @@ export default async function (app: FastifyInstance) {
     "/",
     {
       schema: {
+        querystring: UserSchemas.Queries.UsersQuery,
         response: {
           200: UserSchemas.Bodies.PaginatedUsers,
         },
       },
     },
-    async () => {
-      return await app.usersService.findAll();
+    async ({ query: { limit = 10, offset = 0 } }) => {
+      return await app.usersService.findAll({
+        limit: Number(limit),
+        offset: Number(offset),
+      });
     }
   );
 }

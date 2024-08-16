@@ -1,24 +1,25 @@
 import type { User } from "./model";
-import { BadRequestException, NotFoundException } from "../commons/exceptions";
-import { UsersRepository } from "./usersRepository";
+import { NotFoundException } from "../commons/exceptions";
+import { IUserRepository } from "./userRepository";
+import { PaginatedResult, Pagination } from "../commons/models";
+import { validatePagination } from "../commons/pagination";
 
 export class UsersService {
-  constructor(protected readonly usersRepository: UsersRepository) {}
+  constructor(protected readonly userRepository: IUserRepository) {}
 
-  async findAll(): Promise<User[]> {
-    const users = await this.usersRepository.findAll();
-    return users;
+  async findAll(pagination: Pagination): Promise<PaginatedResult<User>> {
+    validatePagination(pagination);
+    return this.userRepository.findAll(pagination);
   }
 
   async findById(id: User["id"]): Promise<User> {
-    const user = await this.usersRepository.findById(id);
+    const user = await this.userRepository.findById(id);
     this.handleNotFound(user, id);
     return user;
   }
 
   async createUser(email: User["email"]): Promise<User> {
-    const user = await this.usersRepository.createUser(email);
-    this.handleNotCreated(user, email);
+    const user = await this.userRepository.create(email);
     return user;
   }
 
@@ -28,17 +29,6 @@ export class UsersService {
   ): asserts user is User {
     if (!user) {
       throw new NotFoundException(`User with id ${id} does not exist`);
-    }
-  }
-
-  private handleNotCreated(
-    user: User | undefined,
-    email: User["email"]
-  ): asserts user is User {
-    if (!user) {
-      throw new BadRequestException(
-        `User with email ${email} cannot be created`
-      );
     }
   }
 }

@@ -1,18 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 import { User } from "../../application/users/model";
-import { UsersRepository } from "../../application/users/usersRepository";
+import { IUserRepository } from "../../application/users/userRepository";
+import { PaginatedResult, Pagination } from "../../application/commons/models";
 
-export class UsersDao implements UsersRepository {
+export class UsersDao implements IUserRepository {
   constructor(protected readonly db: PrismaClient) {}
 
-  async findAll(): Promise<User[]> {
-    const users = this.db.user.findMany({
+  async findAll(pagination: Pagination): Promise<PaginatedResult<User>> {
+    const usersQuery = this.db.user.findMany({
+      skip: pagination.offset,
+      take: pagination.limit,
       select: {
         id: true,
         email: true,
       },
     });
-    return users;
+    const countQuery = this.db.user.count();
+    const [total, users] = await Promise.all([countQuery, usersQuery]);
+    return {
+      total,
+      data: users,
+    };
   }
 
   async findById(id: number): Promise<User | null> {
@@ -28,7 +36,7 @@ export class UsersDao implements UsersRepository {
     return user;
   }
 
-  async createUser(email: string): Promise<User> {
+  async create(email: string): Promise<User> {
     const user = this.db.user.create({
       data: {
         email,
