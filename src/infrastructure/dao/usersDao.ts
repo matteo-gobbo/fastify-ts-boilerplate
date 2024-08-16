@@ -1,15 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import { User } from "../../application/users/model";
 import { IUserRepository } from "../../application/users/userRepository";
-import { PaginatedResult, Pagination } from "../../application/commons/models";
+import {
+  PaginatedResult,
+  Pagination,
+  SortBy,
+} from "../../application/commons/models";
+import { buildOrderBy } from "./utils";
 
 export class UsersDao implements IUserRepository {
   constructor(protected readonly db: PrismaClient) {}
 
-  async findAll(pagination: Pagination): Promise<PaginatedResult<User>> {
+  async findAll(
+    pagination: Pagination,
+    sortBy: SortBy<User>
+  ): Promise<PaginatedResult<User>> {
     const usersQuery = this.db.user.findMany({
       skip: pagination.offset,
       take: pagination.limit,
+      orderBy: buildOrderBy(sortBy),
       select: {
         id: true,
         email: true,

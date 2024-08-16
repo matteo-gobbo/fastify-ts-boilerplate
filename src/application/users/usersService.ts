@@ -1,15 +1,16 @@
 import type { User } from "./model";
 import { NotFoundException } from "../commons/exceptions";
 import { IUserRepository } from "./userRepository";
-import { PaginatedResult, Pagination } from "../commons/models";
-import { validatePagination } from "../commons/pagination";
+import { PaginatedResult, Pagination, SortBy } from "../commons/models";
 
 export class UsersService {
   constructor(protected readonly userRepository: IUserRepository) {}
 
-  async findAll(pagination: Pagination): Promise<PaginatedResult<User>> {
-    validatePagination(pagination);
-    return this.userRepository.findAll(pagination);
+  async findAll(
+    pagination: Pagination,
+    sortBy: SortBy<User>
+  ): Promise<PaginatedResult<User>> {
+    return this.userRepository.findAll(pagination, sortBy);
   }
 
   async findById(id: User["id"]): Promise<User> {

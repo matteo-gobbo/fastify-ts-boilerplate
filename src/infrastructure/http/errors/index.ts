@@ -3,12 +3,16 @@ import {
   BadRequestException,
   NotFoundException,
 } from "../../../application/commons/exceptions";
+import { ZodError } from "zod";
 
 export function errorHandler(
   error: FastifyError,
   request: FastifyRequest,
   reply: FastifyReply
 ) {
+  if (error instanceof ZodError) {
+    return reply.badRequest(JSON.parse(error.message)[0].message);
+  }
   if (error instanceof NotFoundException) {
     return reply.notFound(error.message);
   }

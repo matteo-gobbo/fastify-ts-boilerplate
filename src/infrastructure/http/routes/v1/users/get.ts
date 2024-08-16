@@ -35,11 +35,14 @@ export default async function (app: FastifyInstance) {
         },
       },
     },
-    async ({ query: { limit = 10, offset = 0 } }) => {
-      return await app.usersService.findAll({
-        limit: Number(limit),
-        offset: Number(offset),
-      });
+    async ({ query: { limit, offset, sortBy } }) => {
+      return await app.usersService.findAll(
+        {
+          limit: Number(limit),
+          offset: Number(offset),
+        },
+        sortBy as any // TODO: remove "as any"
+      );
     }
   );
 }
