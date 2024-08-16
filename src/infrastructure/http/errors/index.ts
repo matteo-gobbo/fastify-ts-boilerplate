@@ -35,5 +35,5 @@ export function errorHandler(
     "Unhandled error occurred."
   );
 
-  reply.code(500).send(error.message);
+  reply.internalServerError(error.message);
 }

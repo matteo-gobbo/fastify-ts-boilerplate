@@ -2,18 +2,18 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { UserSchemas } from "../../../schemas";
 
 const routes: FastifyPluginAsyncZod = async (app) => {
-  app.post(
-    "/",
+  app.delete(
+    "/:userId",
     {
       schema: {
-        body: UserSchemas.Bodies.CreateUser,
+        params: UserSchemas.Params.UserId,
         response: {
           200: UserSchemas.Bodies.User,
         },
       },
     },
-    async ({ body: { email } }) => {
-      return await app.usersService.create(email);
+    async ({ params: { userId } }) => {
+      return await app.usersService.delete(Number(userId));
     }
   );
 };

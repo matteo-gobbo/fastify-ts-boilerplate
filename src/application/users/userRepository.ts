@@ -8,4 +8,6 @@ export interface IUserRepository {
   ): Promise<PaginatedResult<User>>;
   findById(id: User["id"]): Promise<User | null>;
   create(email: User["email"]): Promise<User>;
+  delete(id: User["id"]): Promise<User>;
+  update(id: User["id"], email: User["email"]): Promise<User>;
 }

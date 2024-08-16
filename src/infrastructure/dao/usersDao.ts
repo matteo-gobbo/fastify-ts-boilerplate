@@ -33,7 +33,7 @@ export class UsersDao implements IUserRepository {
   }
 
   async findById(id: number): Promise<User | null> {
-    const user = this.db.user.findUnique({
+    return this.db.user.findUnique({
       where: {
         id,
       },
@@ -42,15 +42,32 @@ export class UsersDao implements IUserRepository {
         email: true,
       },
     });
-    return user;
   }
 
   async create(email: string): Promise<User> {
-    const user = this.db.user.create({
+    return this.db.user.create({
       data: {
         email,
       },
     });
-    return user;
+  }
+
+  async delete(id: number): Promise<User> {
+    return this.db.user.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async update(id: number, email: string): Promise<User> {
+    return this.db.user.update({
+      where: {
+        id,
+      },
+      data: {
+        email,
+      },
+    });
   }
 }
