@@ -4,6 +4,10 @@ import fastifyAutoload from "@fastify/autoload";
 import fastifySensible from "@fastify/sensible";
 import { join } from "path";
 import { errorHandler } from "./http/errors";
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from "fastify-type-provider-zod";
 
 const schema = {
   type: "object",
@@ -22,6 +26,9 @@ async function buildServer() {
   const app = fastify({
     logger: true,
   });
+
+  app.setValidatorCompiler(validatorCompiler);
+  app.setSerializerCompiler(serializerCompiler);
 
   await app.register(fastifyEnv, { dotenv: true, schema });
 

@@ -1,16 +1,8 @@
-import {
-  ZodTypeProvider,
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { UserSchemas } from "../../../schemas";
-import { FastifyInstance } from "fastify";
 
-export default async function (app: FastifyInstance) {
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
-
-  app.withTypeProvider<ZodTypeProvider>().post(
+const routes: FastifyPluginAsyncZod = async (app) => {
+  app.post(
     "/",
     {
       schema: {
@@ -24,4 +16,6 @@ export default async function (app: FastifyInstance) {
       return await app.usersService.createUser(email);
     }
   );
-}
+};
+
+export default routes;

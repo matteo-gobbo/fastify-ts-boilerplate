@@ -1,16 +1,8 @@
 import { UserSchemas } from "../../../schemas";
-import {
-  ZodTypeProvider,
-  serializerCompiler,
-  validatorCompiler,
-} from "fastify-type-provider-zod";
-import { FastifyInstance } from "fastify";
+import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 
-export default async function (app: FastifyInstance) {
-  app.setValidatorCompiler(validatorCompiler);
-  app.setSerializerCompiler(serializerCompiler);
-
-  app.withTypeProvider<ZodTypeProvider>().get(
+const routes: FastifyPluginAsyncZod = async (app) => {
+  app.get(
     "/:userId",
     {
       schema: {
@@ -25,7 +17,7 @@ export default async function (app: FastifyInstance) {
     }
   );
 
-  app.withTypeProvider<ZodTypeProvider>().get(
+  app.get(
     "/",
     {
       schema: {
@@ -45,4 +37,6 @@ export default async function (app: FastifyInstance) {
       );
     }
   );
-}
+};
+
+export default routes;
