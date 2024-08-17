@@ -5,9 +5,12 @@ import fastifySensible from "@fastify/sensible";
 import { join } from "path";
 import { errorHandler } from "./http/errors";
 import {
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from "fastify-type-provider-zod";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 
 const schema = {
   type: "object",
@@ -29,6 +32,29 @@ async function buildServer() {
 
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
+
+  app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: "SampleApi",
+        description: "Sample backend service",
+        version: "1.0.0",
+      },
+      servers: [],
+    },
+    transform: jsonSchemaTransform,
+    // You can also create transform with custom skiplist of endpoints that should not be included in the specification:
+    //
+    // transform: createJsonSchemaTransform({
+    //   skipList: [ '/documentation/static/*' ]
+    // })
+  });
+
+  app.register(fastifySwaggerUi, {
+    routePrefix: "/documentation",
+  });
+
+  await app.after();
 
   await app.register(fastifyEnv, { dotenv: true, schema });
 

@@ -6,6 +6,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
     "/:userId",
     {
       schema: {
+        tags: ["Users"],
         params: UserSchemas.Params.UserId,
         response: {
           200: UserSchemas.Bodies.User,
@@ -21,6 +22,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
     "/",
     {
       schema: {
+        tags: ["Users"],
         querystring: UserSchemas.Queries.UsersQuery,
         response: {
           200: UserSchemas.Bodies.PaginatedUsers,

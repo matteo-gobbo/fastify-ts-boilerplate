@@ -6,6 +6,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
     "/",
     {
       schema: {
+        tags: ["Users"],
         body: UserSchemas.Bodies.CreateUser,
         response: {
           200: UserSchemas.Bodies.User,
